@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/menu_a"
-        android:title="A" />
+    <group
+        android:id="@+id/group_content"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_project"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/menu_project" />
+        <item
+            android:id="@+id/nav_navigation"
+            android:icon="@drawable/ic_explore"
+            android:title="@string/menu_nav" />
+        <!--    <item-->
+        <!--        android:id="@+id/menu_person"-->
+        <!--        android:icon="@drawable/ic_account_circle"-->
+        <!--        android:title="@string/menu_person" />-->
+        <item
+            android:id="@+id/nav_official_account"
+            android:icon="@drawable/ic_receipt"
+            android:title="@string/menu_official_account" />
+    </group>
+    <group android:id="@+id/group_action">
+        <item
+            android:id="@+id/menu_register"
+            android:icon="@drawable/ic_person_add"
+            android:title="@string/menu_register" />
+        <item
+            android:id="@+id/menu_login"
+            android:icon="@drawable/ic_perm_identity"
+            android:title="@string/menu_login" />
+        <item
+            android:id="@+id/menu_logout"
+            android:icon="@drawable/ic_power_settings_new"
+            android:title="@string/menu_logout" />
+    </group>
 </menu>

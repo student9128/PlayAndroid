@@ -7,6 +7,21 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.kevin.playandroid.home.HomeFragment"
-        android:label="Home"
+        android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_project"
+        android:name="com.kevin.playandroid.project.ProjectFragment"
+        android:label="@string/menu_project"
+        tools:layout="@layout/fragment_project" />
+    <fragment
+        android:id="@+id/nav_navigation"
+        android:name="com.kevin.playandroid.nav.NavFragment"
+        android:label="@string/menu_nav"
+        tools:layout="@layout/fragment_nav" />
+    <fragment
+        android:id="@+id/nav_official_account"
+        android:name="com.kevin.playandroid.wxarticle.OfficialAccountFragment"
+        android:label="@string/menu_official_account"
+        tools:layout="@layout/fragment_official_account" />
 </navigation>

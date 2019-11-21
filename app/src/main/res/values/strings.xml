@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">PlayAndroid</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_project">Project</string>
+    <string name="menu_nav">Nav</string>
+    <string name="menu_person">User</string>
+    <string name="menu_official_account">Official Account</string>
+    <string name="menu_logout">Sign out</string>
+    <string name="menu_register">Sign up</string>
+    <string name="menu_login">Sign in</string>
 </resources>
