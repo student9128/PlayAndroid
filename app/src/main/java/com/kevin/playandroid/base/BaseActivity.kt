@@ -2,6 +2,9 @@ package com.kevin.playandroid.base
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
+import com.kevin.playandroid.R
+import com.kevin.playandroid.listener.ActivityCreateListener
 import kotlinx.android.synthetic.main.layout_tool_bar.*
 
 /**
@@ -11,14 +14,18 @@ import kotlinx.android.synthetic.main.layout_tool_bar.*
  * Describe:<br/>
  */
 abstract class BaseActivity : AppBaseActivity() {
+    var toolbar: Toolbar? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(getLayoutResId())
+        initToolbar()
         initView()
         initListener()
     }
 
-    fun initToolbar() {
-        setSupportActionBar(tool_bar)
+    private fun initToolbar() {
+        toolbar = findViewById(R.id.tool_bar)
+        setSupportActionBar(toolbar!!)
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeButtonEnabled(true)
@@ -33,6 +40,9 @@ abstract class BaseActivity : AppBaseActivity() {
         return true
     }
 
+    abstract fun getLayoutResId(): Int
     abstract fun initView()
     abstract fun initListener()
+
+
 }
