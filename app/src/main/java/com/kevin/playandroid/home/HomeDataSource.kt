@@ -51,7 +51,7 @@ class HomeDataSource(var homeModel: HomeModel) :
         val httpService = AppRetrofit.appRetrofit.getHttpService()
         launch {
             val response = withContext(Dispatchers.IO) {
-                httpService.getArticleListKtx(0)
+                httpService.getArticleListKtx(params.key)
             }
             if (response.isSuccessful) {
                 val message = response.message()
@@ -59,7 +59,7 @@ class HomeDataSource(var homeModel: HomeModel) :
                 val response = response.body()
                 val datas = response?.data?.datas
                 val curPage = response?.data?.curPage
-                callback.onResult(datas!!, params.key)
+                callback.onResult(datas!!, params.key+1)
             }
         }
     }
