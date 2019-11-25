@@ -1,10 +1,10 @@
 package com.kevin.playandroid.http
 
+import com.kevin.playandroid.home.Home
 import io.reactivex.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
+import retrofit2.http.*
 
 /**
  * Created by Kevin on 2019-11-22<br/>
@@ -29,5 +29,14 @@ interface HttpService {
     ): Observable<Map<String, Any>>
 
     @GET("user/logout")
-    fun logout():Observable<Map<String,Any>>
+    fun logout(): Observable<Map<String, Any>>
+
+    @GET("article/list/{page}/json")
+    fun getArticleList(@Path("page") page: Int): Observable<List<Home>>
+
+    //
+//    @GET("article/list/{page}/json")
+//    fun getArticleListKtx(@Path("page") page: Int): Deferred<Response<Home>>
+    @GET("article/list/{page}/json")
+    suspend fun getArticleListKtx(@Path("page") page: Int): Response<Home>
 }

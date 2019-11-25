@@ -36,12 +36,13 @@ class AppRetrofit {
         retrofit = Retrofit.Builder()
             .client(initBuilder().build())
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .addCallAdapterFactory()
             .baseUrl(BASE_URL)
             .build()
     }
 
-    fun getHttpService(httpService: () -> HttpService): HttpService {
+    fun getHttpService(httpService: (HttpService) -> Unit): HttpService {
         return appRetrofit.create(HttpService::class.java)
     }
 

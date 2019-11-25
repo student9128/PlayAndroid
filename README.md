@@ -3,9 +3,13 @@
 AndroidX
 
 ### 提交记录
-3. 2019/11/22 添加网络框架和一些基类，去掉对Navigation的使用，改用原始的Fragment切换方法，并优化从DrawerLayout跳转Activity的问题
-2. 2019/11/21 提交关于Navigation的使用，但是由于根据不够灵活，后面取消使用，改用原始方法
-1. 2019/11/20 添加基类，工具类,使用
+4.2019/11/23 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
+
+3.2019/11/22 添加网络框架和一些基类，去掉对Navigation的使用，改用原始的Fragment切换方法，并优化从DrawerLayout跳转Activity的问题
+
+2.2019/11/21 提交关于Navigation的使用，但是由于根据不够灵活，后面取消使用，改用原始方法
+
+1.2019/11/20 添加基类，工具类,使用
 
 ### 开发中的问题
 1. DrawerLayout滑动返回，需要将NavigationView放到布局最后才可以。
@@ -78,3 +82,5 @@ class MainActivity : BaseActivity() {
 5. 对于工具类的封装：适合自己的就是最好的。java开发时候都封装过SP，之前看到别人的Kotlin对于SP的封装，就搜索了下，
 发现他们都是把所要存储的key值写到了工具类，有些写了一些高阶函数，但是依然避免不了set,get。或许是水平有限吧，不知道
 是不是有其他优势，但个人感觉不好用，依旧采用之前的方法写，稍作改变。
+
+6. 对Coroutines初步使用，起初一直困惑CoroutineScope的用法，经过搜索发现需要进行实现该接口，并重写 ```public val coroutineContext: CoroutineContext```。对与ViewModel和Paging的使用还在摸索中，暂时根据网上文章进行实现，后面进一步封装和深入理解。
