@@ -3,6 +3,7 @@
 AndroidX
 
 ### 提交记录
+6.2019/11/26 使用AndroidStudio 4.0 Canary 4 升级Gradle版本为4.0.0-alpha04
 5.2019/11/26 对viewModel和Paging的使用进行优化，添加网络请求状态，首页界面UI优化
 4.2019/11/25 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
 
@@ -104,3 +105,11 @@ class MainActivity : BaseActivity() {
 ```
 7. 对Coroutines初步使用，起初一直困惑CoroutineScope的用法，经过搜索发现需要进行实现该接口，并重写 ```public val coroutineContext: CoroutineContext```。对与ViewModel和Paging的使用还在摸索中，暂时根据网上文章进行实现，后面进一步封装和深入理解。
 8. ViewModel配合Paging使用，网络请求在Paging的PageKeyedDataSource中进行，这时候需要将网络请求状态返给ViewModel,z这里添加了一个`progressStatus：MutableLiveData<String>`，ViewModel则通过`homeLiveData: MutableLiveData<HomeDataSource>` 拿到`HomeDataSource`，再通过`Transformations.switchMap`装换出来所需要的progressStatus，然后再在Fragment或者Activity拿到这个状态进行页面替换展示。
+9. 升级Gradle版本过程遇到错误
+```
+ERROR: Could not find org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60-eap-25
+```
+解决方案：Kotlin版本改为1.3.60-eap-25，build.gradle文件中添加
+```
+ maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+```
