@@ -4,10 +4,6 @@ import androidx.lifecycle.*
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.kevin.playandroid.http.AppRetrofit
-import com.kevin.playandroid.util.LogUtils
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Kevin on 2019-11-25<br/>
@@ -15,30 +11,41 @@ import kotlin.coroutines.CoroutineContext
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeModel : ViewModel(), LifecycleObserver, CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
-    private var data = MutableLiveData<PagedList<Home>>()
-    var d: Home? = null
+class HomeModel : ViewModel() {
+    private var liveData: LiveData<PagedList<DataX>>
+    private var homeLiveData: MutableLiveData<HomeDataSource> = MutableLiveData()
+    private var mLoadingStatus: LiveData<String> = MutableLiveData()
 
-    fun initPagedListBuilder(homeModel: HomeModel): LiveData<PagedList<DataX>> {
+    init {
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setEnablePlaceholders(false)
             .build()
-//        initPagedListBuilder(config)
-        val dataSourceFactory = object : DataSource.Factory<Int, DataX>() {
-            override fun create(): DataSource<Int, DataX> {
-                return HomeDataSource(homeModel)
-            }
-        }
-        val build = LivePagedListBuilder(dataSourceFactory, config).build()
-        return build
+        liveData = initPagedListBuilder(config).build()
+        mLoadingStatus = Transformations.switchMap(
+            homeLiveData
+        ) { input -> input!!.getProgressStatus() }
+
+    }
+
+    fun getLoadingStatus(): LiveData<String> {
+        return mLoadingStatus
+    }
+
+    fun getData(): LiveData<PagedList<DataX>> {
+        return liveData
     }
 
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
+    private fun initPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<Int, DataX> {
+        val dataSourceFactory = object : DataSource.Factory<Int, DataX>() {
+            override fun create(): DataSource<Int, DataX> {
+                val homeDataSource = HomeDataSource(viewModelScope)
+                homeLiveData.postValue(homeDataSource)
+                return homeDataSource
+            }
 
+        }
+        return LivePagedListBuilder<Int, DataX>(dataSourceFactory, config)
     }
 }

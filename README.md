@@ -3,7 +3,8 @@
 AndroidX
 
 ### 提交记录
-4.2019/11/23 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
+5.2019/11/26 对viewModel和Paging的使用进行优化，添加网络请求状态，首页界面UI优化
+4.2019/11/25 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
 
 3.2019/11/22 添加网络框架和一些基类，去掉对Navigation的使用，改用原始的Fragment切换方法，并优化从DrawerLayout跳转Activity的问题
 
@@ -82,5 +83,24 @@ class MainActivity : BaseActivity() {
 5. 对于工具类的封装：适合自己的就是最好的。java开发时候都封装过SP，之前看到别人的Kotlin对于SP的封装，就搜索了下，
 发现他们都是把所要存储的key值写到了工具类，有些写了一些高阶函数，但是依然避免不了set,get。或许是水平有限吧，不知道
 是不是有其他优势，但个人感觉不好用，依旧采用之前的方法写，稍作改变。
-
-6. 对Coroutines初步使用，起初一直困惑CoroutineScope的用法，经过搜索发现需要进行实现该接口，并重写 ```public val coroutineContext: CoroutineContext```。对与ViewModel和Paging的使用还在摸索中，暂时根据网上文章进行实现，后面进一步封装和深入理解。
+6. 使用代码控制条目选中状态：在使用NavigationView的时候，我通过自定义显示点击的条目的颜色，可以通过xml的select来实现。但是发现这里使用代码区实现更简单一些。在网上看到java的实现方式 
+```
+ int[][] states = new int[][] {
+        new int[]{-android.R.attr.state_pressed}, // not pressed
+        new int[] { android.R.attr.state_pressed}  // pressed
+    };
+    int[] colors = new int[] {
+        foregroundColor,
+        accentColor,
+        accentColor
+    };
+  ColorStateList myList = new ColorStateList(states, colors);
+```
+那么Kotlin怎么实现呢，这里就涉及到了Kotlin二维数组的使用，由于好久没用过了也是在网上苦搜了一把
+```
+  val states = arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked))
+  val colors = intArrayOf(Color.GRAY, ContextCompat.getColor(this, R.color.colorAccent))
+  var colorStateList = ColorStateList(states, colors)
+```
+7. 对Coroutines初步使用，起初一直困惑CoroutineScope的用法，经过搜索发现需要进行实现该接口，并重写 ```public val coroutineContext: CoroutineContext```。对与ViewModel和Paging的使用还在摸索中，暂时根据网上文章进行实现，后面进一步封装和深入理解。
+8. ViewModel配合Paging使用，网络请求在Paging的PageKeyedDataSource中进行，这时候需要将网络请求状态返给ViewModel,z这里添加了一个`progressStatus：MutableLiveData<String>`，ViewModel则通过`homeLiveData: MutableLiveData<HomeDataSource>` 拿到`HomeDataSource`，再通过`Transformations.switchMap`装换出来所需要的progressStatus，然后再在Fragment或者Activity拿到这个状态进行页面替换展示。

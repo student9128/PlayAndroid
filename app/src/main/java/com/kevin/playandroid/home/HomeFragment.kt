@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kevin.playandroid.R
@@ -43,11 +42,10 @@ class HomeFragment : BaseFragment() {
         mRecyclerView = view.findViewById(R.id.recycler_view)
         val layoutManager = LinearLayoutManager(mActivity)
         mRecyclerView!!.layoutManager = layoutManager
-        mAdapter = HomeAdapter()
+        mAdapter = HomeAdapter(mActivity!!)
         mRecyclerView!!.adapter = mAdapter
-        val initPagedListBuilder = homeModel.initPagedListBuilder(homeModel)
-        initPagedListBuilder.observe(this,
-            Observer<PagedList<DataX>> { t -> mAdapter!!.submitList(t) })
+        homeModel.getData().observe(this, Observer { t -> mAdapter!!.submitList(t) })
+        homeModel.getLoadingStatus().observe(this, Observer { t -> printD("状态为:$t") })
         return view
     }
 
