@@ -11,11 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.snackbar.Snackbar
 import com.kevin.playandroid.R
+import com.kevin.playandroid.util.LogUtils
+import com.kevin.playandroid.util.ToastUtils
 import kotlinx.android.synthetic.main.adapter_item_home.view.*
 
 /**
@@ -33,9 +38,8 @@ class HomeAdapter(val context: Context) :
             }
 
             override fun areContentsTheSame(oldItem: DataX, newItem: DataX): Boolean {
-                return oldItem.title == newItem.title && oldItem.author == newItem.author && oldItem.id == newItem.id
+                return oldItem.id == newItem.id && oldItem.collect == newItem.collect
             }
-
         }
     }
 
@@ -46,6 +50,7 @@ class HomeAdapter(val context: Context) :
         val category: TextView = itemView.tv_category
         val time: TextView = itemView.tv_time
         val container: LinearLayout = itemView.ll_container
+        val mcContainer: MaterialCardView = itemView.mc_container
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeAdapter.ViewHolder {
@@ -67,28 +72,26 @@ class HomeAdapter(val context: Context) :
             val categoryStr = "分类：${formatHtml(superChapterName)}/${formatHtml(chapterName)}"
             holder.category.text = spanString(categoryStr, 3, categoryStr.length)
 
-            holder.time.text = "时间：$niceDate"
+            holder.time.text = niceDate
             if (tags.isNotEmpty()) {
                 holder.tag.visibility = View.VISIBLE
                 holder.tag.text = tags[0].name
             } else {
                 holder.tag.visibility = View.GONE
             }
-//            tags.forEach { c ->
-//                var tv: TextView = TextView(context)
-//                var lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(-2, -2)
-//                lp.setMargins(0, 0, DisplayUtils.dip2px(context, 5f), 0)
-//                tv.layoutParams = lp
-//                tv.text = c.name
-//                tv.setPadding(5, 5, 5, 5)
-//                tv.setTextColor(ContextCompat.getColor(context, R.color.green))
-//                tv.setBackgroundResource(R.drawable.bg_home_tag)
-//                holder.container.addView(tv, 0)
-//
-//            }
-
-
+            holder.mcContainer.setOnClickListener {
+//                ToastUtils.showToast(context, "$position")
+                LogUtils.printD("HomeAdapter", "pos=$position")
+//                Toast.makeText(context,"$position",Toast.LENGTH_SHORT).show()
+             ToastUtils.showSnack(holder.mcContainer,"$position")
+            }
         }
+
+    }
+
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
     }
 
     private fun spanString(spanStr: String, start: Int, end: Int): SpannableString {
@@ -111,5 +114,9 @@ class HomeAdapter(val context: Context) :
             Html.FROM_HTML_MODE_LEGACY
         ) else Html.fromHtml(text)
 
+    }
+
+    interface OnRecyclerItemClickListener {
+        fun onRecyclerItemClick(position: Int)
     }
 }

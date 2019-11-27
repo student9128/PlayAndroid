@@ -1,7 +1,6 @@
 package com.kevin.playandroid.sign
 
 import android.view.MenuItem
-import androidx.core.view.GravityCompat
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseActivity
 import com.kevin.playandroid.listener.ActivityCreateListener

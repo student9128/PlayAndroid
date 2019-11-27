@@ -2,7 +2,7 @@
 
 AndroidX
 
-### 提交记录
+### 部分提交记录
 6.2019/11/26 使用AndroidStudio 4.0 Canary 4 升级Gradle版本为4.0.0-alpha04
 5.2019/11/26 对viewModel和Paging的使用进行优化，添加网络请求状态，首页界面UI优化
 4.2019/11/25 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
@@ -113,3 +113,4 @@ ERROR: Could not find org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60-eap-25
 ```
  maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 ```
+10. 登录注册界面在小屏幕上面弹出键盘会出现Toolbar上移的问题，解决方案：将EditText放在ScrollView里面，Toolbar放在外面即可解决

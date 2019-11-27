@@ -4,10 +4,11 @@
     android:id="@+id/tool_bar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:orientation="vertical"
     android:background="@color/colorPrimary"
-    app:title="@string/app_name"
+    android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:navigationIcon="@drawable/ic_back_material_light">
+    app:layout_scrollFlags="scroll|enterAlways|snap"
+    app:navigationIcon="@drawable/ic_back_material_light"
+    app:title="@string/app_name">
 
 </androidx.appcompat.widget.Toolbar>

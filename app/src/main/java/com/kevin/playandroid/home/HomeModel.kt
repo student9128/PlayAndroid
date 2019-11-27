@@ -1,7 +1,6 @@
 package com.kevin.playandroid.home
 
 import androidx.lifecycle.*
-import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 
@@ -13,18 +12,32 @@ import androidx.paging.PagedList
  */
 class HomeModel : ViewModel() {
     private var liveData: LiveData<PagedList<DataX>>
-    private var homeLiveData: MutableLiveData<HomeDataSource> = MutableLiveData()
     private var mLoadingStatus: LiveData<String> = MutableLiveData()
+    private var config: PagedList.Config = PagedList.Config.Builder()
+        .setPageSize(10)
+        .setEnablePlaceholders(false)
+        .build()
 
     init {
-        val config = PagedList.Config.Builder()
-            .setPageSize(10)
-            .setEnablePlaceholders(false)
-            .build()
-        liveData = initPagedListBuilder(config).build()
+        val homeDataSourceFactory = createFac()
+        liveData = createLiveData(homeDataSourceFactory)
         mLoadingStatus = Transformations.switchMap(
-            homeLiveData
+            homeDataSourceFactory.getSourceLiveData()
         ) { input -> input!!.getProgressStatus() }
+
+    }
+
+    private fun createLiveData(homeDataSourceFactory: HomeDataSourceFactory) =
+        LivePagedListBuilder<Int, DataX>(homeDataSourceFactory, config).build()
+
+    private fun createFac(): HomeDataSourceFactory {
+        return HomeDataSourceFactory()
+    }
+
+    /**
+     * 在该方法里获取所有需要的结果
+     */
+    fun getResult() {
 
     }
 
@@ -32,20 +45,15 @@ class HomeModel : ViewModel() {
         return mLoadingStatus
     }
 
-    fun getData(): LiveData<PagedList<DataX>> {
-        return liveData
+    /**
+     * 通过重建进行刷新
+     */
+    fun refresh(): LiveData<PagedList<DataX>> {
+        return createLiveData(createFac())
+
     }
 
-
-    private fun initPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<Int, DataX> {
-        val dataSourceFactory = object : DataSource.Factory<Int, DataX>() {
-            override fun create(): DataSource<Int, DataX> {
-                val homeDataSource = HomeDataSource(viewModelScope)
-                homeLiveData.postValue(homeDataSource)
-                return homeDataSource
-            }
-
-        }
-        return LivePagedListBuilder<Int, DataX>(dataSourceFactory, config)
+    fun getData(): LiveData<PagedList<DataX>> {
+        return liveData
     }
 }

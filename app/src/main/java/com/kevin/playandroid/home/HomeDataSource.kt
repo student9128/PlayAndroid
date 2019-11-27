@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Kevin on 2019-11-25<br/>
@@ -16,8 +17,8 @@ import kotlinx.coroutines.withContext
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeDataSource(private val scope: CoroutineScope) :
-    PageKeyedDataSource<Int, DataX>() {
+class HomeDataSource() :
+    PageKeyedDataSource<Int, DataX>(),CoroutineScope {
     private var httpService: HttpService = AppRetrofit.appRetrofit.getHttpService()
     private var progressStatus: MutableLiveData<String> = MutableLiveData()
 
@@ -29,7 +30,7 @@ class HomeDataSource(private val scope: CoroutineScope) :
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, DataX>
     ) {
-        scope.launch {
+        launch {
             progressStatus.postValue("Loading")
             val response = withContext(Dispatchers.IO) {
                 httpService.getArticleListKtx(0)
@@ -40,7 +41,7 @@ class HomeDataSource(private val scope: CoroutineScope) :
                 val response = response.body()
                 val datas = response?.data?.datas
                 val toString = response.toString()
-                LogUtils.printD("Hello",toString)
+                LogUtils.printD("Hello","111")
                 val curPage = response?.data?.curPage
                 callback.onResult(datas!!, null, curPage!! + 1)
             } else {
@@ -51,7 +52,7 @@ class HomeDataSource(private val scope: CoroutineScope) :
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, DataX>) {
-        scope.launch {
+        launch {
             val response = withContext(Dispatchers.IO) {
                 httpService.getArticleListKtx(params.key)
             }
@@ -66,6 +67,9 @@ class HomeDataSource(private val scope: CoroutineScope) :
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, DataX>) {
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
 
 }
