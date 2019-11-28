@@ -1,5 +1,6 @@
 package com.kevin.playandroid.http
 
+import com.kevin.playandroid.home.Banner
 import com.kevin.playandroid.home.Home
 import io.reactivex.Observable
 import kotlinx.coroutines.Deferred
@@ -32,11 +33,8 @@ interface HttpService {
     fun logout(): Observable<Map<String, Any>>
 
     @GET("article/list/{page}/json")
-    fun getArticleList(@Path("page") page: Int): Observable<List<Home>>
-
-    //
-//    @GET("article/list/{page}/json")
-//    fun getArticleListKtx(@Path("page") page: Int): Deferred<Response<Home>>
-    @GET("article/list/{page}/json")
     suspend fun getArticleListKtx(@Path("page") page: Int): Response<Home>
+
+    @GET("banner/json")
+    suspend fun getBanner():Response<Banner>
 }

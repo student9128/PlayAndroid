@@ -3,8 +3,12 @@
 AndroidX
 
 ### 部分提交记录
+7.2019/11/28 首页添加刷新和头部轮播
+
 6.2019/11/26 使用AndroidStudio 4.0 Canary 4 升级Gradle版本为4.0.0-alpha04
+
 5.2019/11/26 对viewModel和Paging的使用进行优化，添加网络请求状态，首页界面UI优化
+
 4.2019/11/25 初步实现使用Coroutines进行数据请求，通过viewModel和Paging进行处理展示数据。下一步，对数据请求和jetPack的使用进行封装
 
 3.2019/11/22 添加网络框架和一些基类，去掉对Navigation的使用，改用原始的Fragment切换方法，并优化从DrawerLayout跳转Activity的问题
@@ -114,3 +118,46 @@ ERROR: Could not find org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60-eap-25
  maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 ```
 10. 登录注册界面在小屏幕上面弹出键盘会出现Toolbar上移的问题，解决方案：将EditText放在ScrollView里面，Toolbar放在外面即可解决
+11. RecyclerView结合Paging使用添加header和footer的问题：解决方案：网上搜索到的文章，https://juejin.im/post/5caa0052f265da24ea7d3c2c，并且解决了添加头布局刷新的问题。
+12. 使用了第三方的Banner库，地址：https://github.com/zhpanvip/BannerViewPager.
+使用的时候 `viewPager.create(d)`一定要放在初始化设置参数的后面
+```
+    fun bindTo(d: List<BannerData>) {
+            viewPager.setAutoPlay(true)
+                .setInterval(5000)
+                .setPageMargin(DisplayUtils.dp2px(10f))
+                .setPageStyle(PageStyle.MULTI_PAGE_SCALE)
+                .setHolderCreator(HolderCreator { BannerViewHolder() })
+                .setIndicatorColor(ContextCompat.getColor(context,R.color.gray),ContextCompat.getColor(context,R.color.colorPrimary))
+                .setIndicatorMargin(0,0,0,DisplayUtils.dp2px(16f))
+            viewPager.create(d)
+        }
+```
+13. RecyclerView快速滑动到顶部的时候，所提供的方法`scrollToPosition()`是直接到顶部效果不好，`smoothScrollToPosition()`是匀速滑动到顶部，到下滑的多了这个方法就不行了需要很长时间。解决方案：根据当前索能看到的第一条目和所要滑动到的也就是顶部第一条的距离，设置一个最大滑动条目，大于这个距离就先直接调用`scrollToPosition()`，再`smoothScrollToPosition()`
+```
+    /**
+     * 该方法的文章地址
+     * https://carlrice.io/blog/better-smoothscrollto
+     */
+    private fun RecyclerView.betterSmoothScrollToPosition(targetItem: Int) {
+        layoutManager?.apply {
+            val maxScroll = 20
+            when (this) {
+                is LinearLayoutManager -> {
+                    val topItem = findFirstVisibleItemPosition()
+                    val distance = topItem - targetItem
+                    val anchorItem = when {
+                        distance > maxScroll -> targetItem + maxScroll
+                        distance < -maxScroll -> targetItem - maxScroll
+                        else -> topItem
+                    }
+                    if (anchorItem != topItem) scrollToPosition(anchorItem)
+                    post {
+                        smoothScrollToPosition(targetItem)
+                    }
+                }
+                else -> smoothScrollToPosition(targetItem)
+            }
+        }
+    }
+```

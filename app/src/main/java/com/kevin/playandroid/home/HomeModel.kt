@@ -3,6 +3,13 @@ package com.kevin.playandroid.home
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.kevin.playandroid.http.AppRetrofit
+import com.kevin.playandroid.http.HttpService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by Kevin on 2019-11-25<br/>
@@ -10,9 +17,11 @@ import androidx.paging.PagedList
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeModel : ViewModel() {
+class HomeModel : ViewModel(), CoroutineScope {
+    private var httpService: HttpService = AppRetrofit.appRetrofit.getHttpService()
     private var liveData: LiveData<PagedList<DataX>>
     private var mLoadingStatus: LiveData<String> = MutableLiveData()
+    private var bannerLiveData: MutableLiveData<List<BannerData>> = MutableLiveData()
     private var config: PagedList.Config = PagedList.Config.Builder()
         .setPageSize(10)
         .setEnablePlaceholders(false)
@@ -25,6 +34,23 @@ class HomeModel : ViewModel() {
             homeDataSourceFactory.getSourceLiveData()
         ) { input -> input!!.getProgressStatus() }
 
+    }
+
+    fun getBannerData() {
+        launch {
+            val response = withContext(Dispatchers.IO) {
+                httpService.getBanner()
+            }
+            if (response.isSuccessful) {
+                val response = response.body()
+                val data = response?.data
+                bannerLiveData.postValue(data)
+            }
+        }
+    }
+
+    fun getBannerLiveData(): MutableLiveData<List<BannerData>> {
+        return bannerLiveData
     }
 
     private fun createLiveData(homeDataSourceFactory: HomeDataSourceFactory) =
@@ -56,4 +82,7 @@ class HomeModel : ViewModel() {
     fun getData(): LiveData<PagedList<DataX>> {
         return liveData
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 }

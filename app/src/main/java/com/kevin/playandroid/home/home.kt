@@ -1,5 +1,7 @@
 package com.kevin.playandroid.home
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * Created by Kevin on 2019-11-22<br/>
  * Blog:http://student9128.top/
@@ -7,12 +9,13 @@ package com.kevin.playandroid.home
  * Describe:<br/>
  */
 data class Home(
-    val `data`: Data,
+    @SerializedName("data")
+    val `data`: ArticleData,
     val errorCode: Int,
     val errorMsg: String
 )
 
-data class Data(
+data class ArticleData(
     val curPage: Int,
     val datas: List<DataX>,
     val offset: Int,

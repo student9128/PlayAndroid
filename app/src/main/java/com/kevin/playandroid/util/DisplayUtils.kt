@@ -1,6 +1,7 @@
 package com.kevin.playandroid.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.TypedValue
 
 /**
@@ -34,6 +35,10 @@ object DisplayUtils {
         return (dipValue * scale + 0.5f).toInt()
     }
 
+    fun dp2px(dpValue: Float): Int {
+        return (dpValue * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+    }
+
     /**
      * 将px值转换为sp值，保证文字大小不变
      *
@@ -59,13 +64,17 @@ object DisplayUtils {
     }
 
     fun dp2px(context: Context, dpValue: Float): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources
-            .displayMetrics).toInt()
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources
+                .displayMetrics
+        ).toInt()
     }
 
     fun sp2px(context: Context, value: Int): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, value.toFloat(), context.resources
-            .displayMetrics).toInt()
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, value.toFloat(), context.resources
+                .displayMetrics
+        ).toInt()
     }
 
 }
