@@ -5,10 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.kevin.playandroid.http.AppRetrofit
 import com.kevin.playandroid.http.HttpService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -17,11 +14,12 @@ import kotlin.coroutines.CoroutineContext
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeModel : ViewModel(), CoroutineScope {
+class HomeModel : ViewModel(), CoroutineScope, LifecycleObserver {
     private var httpService: HttpService = AppRetrofit.appRetrofit.getHttpService()
     private var liveData: LiveData<PagedList<DataX>>
     private var mLoadingStatus: LiveData<String> = MutableLiveData()
     private var bannerLiveData: MutableLiveData<List<BannerData>> = MutableLiveData()
+    private lateinit var jobBanner: Job
     private var config: PagedList.Config = PagedList.Config.Builder()
         .setPageSize(10)
         .setEnablePlaceholders(false)
@@ -37,7 +35,7 @@ class HomeModel : ViewModel(), CoroutineScope {
     }
 
     fun getBannerData() {
-        launch {
+        jobBanner = launch {
             val response = withContext(Dispatchers.IO) {
                 httpService.getBanner()
             }
@@ -85,4 +83,9 @@ class HomeModel : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
+        jobBanner.cancel()
+    }
 }

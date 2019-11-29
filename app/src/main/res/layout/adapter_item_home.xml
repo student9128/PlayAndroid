@@ -2,11 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mc_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/margin_5"
     android:background="@color/white"
-    android:id="@+id/mc_container"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +38,18 @@
             app:layout_constraintLeft_toLeftOf="@id/tv_title"
             app:layout_constraintRight_toLeftOf="@id/tv_time"
             app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+            <TextView
+                android:id="@+id/tv_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_5"
+                android:background="@drawable/bg_home_tag_new"
+                android:paddingHorizontal="@dimen/padding_5"
+                android:paddingVertical="@dimen/padding_3"
+                android:text="新"
+                android:textColor="@color/red"
+                android:visibility="gone"></TextView>
 
             <TextView
                 android:id="@+id/tv_tag"
@@ -76,9 +88,9 @@
             android:layout_marginLeft="@dimen/margin_5"
             android:ellipsize="marquee"
             android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="@id/ll_container"
             app:layout_constraintRight_toRightOf="@id/iv_favorite"
             app:layout_constraintTop_toTopOf="@id/ll_container"
-            app:layout_constraintBottom_toBottomOf="@id/ll_container"
             tools:text="时间：1小时前" />
 
         <ImageView

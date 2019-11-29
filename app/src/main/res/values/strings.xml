@@ -10,4 +10,15 @@
     <string name="menu_login">Sign in</string>
     <string name="account">Account</string>
     <string name="password">Password</string>
+    <string name="location_hint">Please text web site</string>
+    <string name="none">none</string>
+    <string name="ad">AD</string>
+    <string name="analytic">ANALYTIC</string>
+    <string name="test">TEST</string>
+    <string name="malware">MALWARE</string>
+    <string name="unwanted">UNWANTED</string>
+    <string name="social">SOCIAL</string>
+    <string name="content">CONTENT</string>
+    <string name="harmful">HARMFUL</string>
+    <string name="phishing">PHISHING</string>
 </resources>

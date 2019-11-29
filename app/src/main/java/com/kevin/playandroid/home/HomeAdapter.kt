@@ -1,6 +1,7 @@
 package com.kevin.playandroid.home
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.card.MaterialCardView
 import com.kevin.playandroid.R
+import com.kevin.playandroid.common.WebActivity
 import com.kevin.playandroid.util.DisplayUtils
 import com.kevin.playandroid.util.FormatUtils
 import com.kevin.playandroid.util.ToastUtils
@@ -59,6 +61,7 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
         val time: TextView = itemView.tv_time
         val container: LinearLayout = itemView.ll_container
         val mcContainer: MaterialCardView = itemView.mc_container
+        val new: TextView = itemView.tv_new
         fun bindTo(data: DataX?) {
             data?.let {
                 title.text = FormatUtils.formatHtml(it.title)
@@ -76,6 +79,9 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 val categoryStr =
                     "分类：${FormatUtils.formatHtml(it.superChapterName)}/${FormatUtils.formatHtml(it.chapterName)}"
                 category.text = FormatUtils.spanString(context, categoryStr, 3, categoryStr.length)
+                category.setOnClickListener {
+                    ToastUtils.showSnack(category, "$categoryStr")
+                }
                 time.text = it.niceDate
                 if (it.tags.isNotEmpty()) {
                     tag.visibility = View.VISIBLE
@@ -83,14 +89,22 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 } else {
                     tag.visibility = View.GONE
                 }
-                mcContainer.setOnClickListener {
-                    ToastUtils.showSnack(mcContainer, "${data.title}")
+                if (it.fresh) {
+                    new.visibility = View.VISIBLE
+                } else {
+                    new.visibility = View.GONE
                 }
+            }
+            mcContainer.setOnClickListener {
+                val intent = Intent(context, WebActivity::class.java)
+                intent.putExtra("url", data!!.link)
+                context.startActivity(intent)
             }
         }
     }
 
-    class HeaderViewHolder(itemView: View,var context: Context) : RecyclerView.ViewHolder(itemView) {
+    class HeaderViewHolder(itemView: View, var context: Context) :
+        RecyclerView.ViewHolder(itemView) {
         var viewPager: BannerViewPager<BannerData, BannerViewHolder> =
             itemView.findViewById(R.id.view_pager)
 
@@ -100,8 +114,11 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 .setPageMargin(DisplayUtils.dp2px(10f))
                 .setPageStyle(PageStyle.MULTI_PAGE_SCALE)
                 .setHolderCreator(HolderCreator { BannerViewHolder() })
-                .setIndicatorColor(ContextCompat.getColor(context,R.color.gray),ContextCompat.getColor(context,R.color.colorPrimary))
-                .setIndicatorMargin(0,0,0,DisplayUtils.dp2px(16f))
+                .setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.gray),
+                    ContextCompat.getColor(context, R.color.colorPrimary)
+                )
+                .setIndicatorMargin(0, 0, 0, DisplayUtils.dp2px(16f))
             viewPager.create(d)
         }
 
@@ -117,7 +134,7 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
             ITEM_TYPE_HEADER -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.adapter_home_header, parent, false)
-                HeaderViewHolder(view,context)
+                HeaderViewHolder(view, context)
             }
             ITEM_TYPE_FOOTER -> {
                 val view = LayoutInflater.from(parent.context)

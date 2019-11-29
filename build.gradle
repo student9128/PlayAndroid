@@ -1,23 +1,28 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.60-eap-25'
-    ext.lifecycle_version = "2.1.0"
-    ext.room_version = "2.2.1"
-    ext.recyclerview_version = "1.0.0"
-    ext.paging_version = "2.1.0"
-    ext.preference_version = "1.1.0"
-    ext.nav_version = "2.1.0"
+    ext {
+//        kotlin_version = '1.3.60-eap-25'
+        kotlin_version = '1.3.50'
+        lifecycle_version = "2.1.0"
+        room_version = "2.2.1"
+        recyclerview_version = "1.0.0"
+        paging_version = "2.1.0"
+        preference_version = "1.1.0"
+        nav_version = "2.1.0"
+        geckoview_channel = "nightly"
+        geckoview_version = "70.0.20190712095934"
+    }
 
 
     repositories {
         google()
         jcenter()
         mavenCentral()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+//        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0-alpha04'
+        classpath 'com.android.tools.build:gradle:3.5.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -32,6 +37,9 @@ allprojects {
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
         maven { url 'https://jitpack.io' }
+        maven {
+            url "https://maven.mozilla.org/maven2/"
+        }
     }
 }
 

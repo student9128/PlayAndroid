@@ -1,5 +1,6 @@
 package com.kevin.playandroid.http
 
+import android.os.Build
 import com.kevin.playandroid.BuildConfig
 import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.util.SPUtils
@@ -10,7 +11,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashSet
 
 /**
  * Created by Kevin on 2019-11-22<br/>
@@ -72,6 +75,7 @@ class AppRetrofit {
         }
         builder.retryOnConnectionFailure(true)
             .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
+            .writeTimeout(READ_TIME_OUT,TimeUnit.SECONDS)
             .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
             .addInterceptor(SaveCookieInterceptor())
             .addInterceptor(RequestCookiesInterceptor())

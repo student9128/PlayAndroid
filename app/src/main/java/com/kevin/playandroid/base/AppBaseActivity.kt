@@ -11,7 +11,7 @@ import com.kevin.playandroid.util.ToastUtils
  * Describe:<br/>
  */
 open class AppBaseActivity : AppCompatActivity() {
-    var TAG = javaClass.simpleName!!
+    var TAG = javaClass.simpleName
 
     fun printD(msg: Any) {
         LogUtils.printD(TAG, msg)
