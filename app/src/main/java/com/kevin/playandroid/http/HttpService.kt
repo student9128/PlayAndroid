@@ -36,5 +36,8 @@ interface HttpService {
     suspend fun getArticleListKtx(@Path("page") page: Int): Response<Home>
 
     @GET("banner/json")
-    suspend fun getBanner():Response<Banner>
+    suspend fun getBanner(): Response<Banner>
+
+    @GET("article/listproject/{page}/json")
+    suspend fun getProjectList(@Path("page") page: Int): Response<Home>
 }

@@ -49,7 +49,7 @@ data class DataX(
     val shareUser: String,
     val superChapterId: Int,
     val superChapterName: String,
-    val tags: List<TAGS>,
+    val tags: List<Tag>,
     val title: String,
     val type: Int,
     val userId: Int,
@@ -57,7 +57,7 @@ data class DataX(
     val zan: Int
 )
 
-data class TAGS(
+data class Tag(
     val name: String,
     val url: String
 )

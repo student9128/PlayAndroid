@@ -15,8 +15,9 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.card.MaterialCardView
 import com.kevin.playandroid.R
 import com.kevin.playandroid.common.WebActivity
+import com.kevin.playandroid.common.formatHtml
+import com.kevin.playandroid.common.spanString
 import com.kevin.playandroid.util.DisplayUtils
-import com.kevin.playandroid.util.FormatUtils
 import com.kevin.playandroid.util.ToastUtils
 import com.kevin.playandroid.view.AdapterDataObserverProxy
 import com.zhpan.bannerview.BannerViewPager
@@ -59,16 +60,15 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
         val author: TextView = itemView.tv_author
         val category: TextView = itemView.tv_category
         val time: TextView = itemView.tv_time
-        val container: LinearLayout = itemView.ll_container
         val mcContainer: MaterialCardView = itemView.mc_container
         val new: TextView = itemView.tv_new
         fun bindTo(data: DataX?) {
             data?.let {
-                title.text = FormatUtils.formatHtml(it.title)
+                title.text = formatHtml(it.title)
                 val authorStr: String =
                     if (it.author.isNotEmpty()) "作者：${it.author}" else "分享人：${it.shareUser}"
                 val authorSpanStr =
-                    FormatUtils.spanString(
+                   spanString(
                         context,
                         authorStr,
                         if (it.author.isNotEmpty()) 3 else 4,
@@ -77,8 +77,8 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 author.text = authorSpanStr
 //
                 val categoryStr =
-                    "分类：${FormatUtils.formatHtml(it.superChapterName)}/${FormatUtils.formatHtml(it.chapterName)}"
-                category.text = FormatUtils.spanString(context, categoryStr, 3, categoryStr.length)
+                    "分类：${formatHtml(it.superChapterName)}/${formatHtml(it.chapterName)}"
+                category.text = spanString(context, categoryStr, 3, categoryStr.length)
                 category.setOnClickListener {
                     ToastUtils.showSnack(category, "$categoryStr")
                 }

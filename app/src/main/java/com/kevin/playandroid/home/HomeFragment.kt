@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseFragment
+import com.kevin.playandroid.common.betterSmoothScrollToPosition
 
 /**
  * Created by Kevin on 2019-11-20<br/>
@@ -29,7 +30,6 @@ class HomeFragment : BaseFragment() {
     private lateinit var mAdapter: HomeAdapter
     private lateinit var llProgress: LinearLayout
     private lateinit var fab: FloatingActionButton
-    private lateinit var x: PagedList<DataX>
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var bannerData: List<BannerData> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,29 +103,5 @@ class HomeFragment : BaseFragment() {
         return view
     }
 
-    /**
-     * https://carlrice.io/blog/better-smoothscrollto
-     */
-    private fun RecyclerView.betterSmoothScrollToPosition(targetItem: Int) {
-        layoutManager?.apply {
-            val maxScroll = 20
-            when (this) {
-                is LinearLayoutManager -> {
-                    val topItem = findFirstVisibleItemPosition()
-                    val distance = topItem - targetItem
-                    val anchorItem = when {
-                        distance > maxScroll -> targetItem + maxScroll
-                        distance < -maxScroll -> targetItem - maxScroll
-                        else -> topItem
-                    }
-                    if (anchorItem != topItem) scrollToPosition(anchorItem)
-                    post {
-                        smoothScrollToPosition(targetItem)
-                    }
-                }
-                else -> smoothScrollToPosition(targetItem)
-            }
-        }
-    }
 
 }
