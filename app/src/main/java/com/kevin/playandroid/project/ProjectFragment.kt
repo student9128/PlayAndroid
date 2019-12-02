@@ -1,6 +1,7 @@
 package com.kevin.playandroid.project
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseFragment
+import com.kevin.playandroid.common.Constants
+import com.kevin.playandroid.common.WebActivity
 import com.kevin.playandroid.common.betterSmoothScrollToPosition
 import com.kevin.playandroid.home.DataX
+import com.kevin.playandroid.util.SPUtils
+import com.kevin.playandroid.util.ToastUtils
 
 /**
  * Created by Kevin on 2019-11-21<br/>
@@ -23,7 +28,7 @@ import com.kevin.playandroid.home.DataX
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class ProjectFragment : BaseFragment() {
+class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
     private lateinit var projectModel: ProjectModel
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: ProjectAdapter
@@ -31,6 +36,7 @@ class ProjectFragment : BaseFragment() {
     private lateinit var fab: FloatingActionButton
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private var mData: MutableList<DataX> = ArrayList()
+    private var pageNum: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         projectModel = mActivity.run {
@@ -60,7 +66,7 @@ class ProjectFragment : BaseFragment() {
         mRecyclerView.layoutManager = layoutManager
         mAdapter = ProjectAdapter(mActivity!!, mData)
         mRecyclerView.adapter = mAdapter
-        projectModel.getProjectList(0, true)
+        projectModel.getProjectList(pageNum, true)
         projectModel.getData().observe(this, Observer {
             mAdapter.update(it)
         })
@@ -73,6 +79,32 @@ class ProjectFragment : BaseFragment() {
                 mRecyclerView.visibility = View.GONE
             }
         })
+        mAdapter.setOnRecyclerItemListener(this)
         return view
+    }
+
+    override fun onLoadMore() {
+        projectModel.getProjectList(++pageNum)
+    }
+
+    override fun onContainerItemClick(position: Int) {
+        val dataX = mData[position]
+        val intent = Intent(context, WebActivity::class.java)
+        intent.putExtra("url", dataX.link)
+        startActivity(intent)
+    }
+
+    override fun onChildItemClick(viewId: Int, position: Int) {
+        when (viewId) {
+            R.id.tv_favorite -> {
+                val isLogin = SPUtils.getBoolean(Constants.KEY_LOGIN_STATE)
+                if (isLogin) {
+
+                } else {
+                    ToastUtils.showSnack(mRecyclerView, "请先登录")
+                }
+
+            }
+        }
     }
 }

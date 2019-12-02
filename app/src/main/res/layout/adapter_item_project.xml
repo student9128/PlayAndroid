@@ -12,8 +12,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/unit_padding"
-        android:paddingVertical="@dimen/padding_10">
+        android:paddingVertical="@dimen/padding_10"
+        android:paddingLeft="@dimen/unit_padding"
+        android:paddingRight="@dimen/padding_10">
 
         <TextView
             android:id="@+id/tv_title"
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingRight="@dimen/padding_5"
             android:textColor="@color/black"
             android:textSize="@dimen/textSize_16"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -33,8 +35,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="3"
             android:paddingTop="@dimen/padding_5"
+            android:paddingRight="@dimen/padding_5"
             android:paddingBottom="@dimen/padding_10"
             android:textColor="@color/gray"
             app:layout_constraintLeft_toLeftOf="@id/tv_title"
@@ -50,44 +53,78 @@
             android:layout_marginRight="@dimen/margin_5"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="@id/tv_title"
-            app:layout_constraintRight_toLeftOf="@id/mc_cover"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_describe">
 
-            <TextView
-                android:id="@+id/tv_author"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:autoSizeTextType="uniform"
-                android:drawableLeft="@drawable/ic_person"
-                android:drawablePadding="@dimen/padding_3"
-                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxLines="1"
-                tools:text="竺小竹" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_time"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_person"
+                    android:tint="@color/gray" />
+
+                <TextView
+                    android:id="@+id/tv_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
+                    android:drawablePadding="@dimen/padding_3"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="竺小竹" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_7"
-                android:drawableLeft="@drawable/ic_access_time"
-                android:drawablePadding="@dimen/padding_3"
-                android:ellipsize="marquee"
                 android:gravity="center_vertical"
-                android:singleLine="true"
-                tools:text="1小时前" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_favorite"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_access_time"
+                    android:tint="@color/gray" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    tools:text="1小时前" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_7"
-                android:drawableLeft="@drawable/ic_favorite_border"
-                android:drawablePadding="@dimen/padding_3"
-                android:ellipsize="marquee"
                 android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="0" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_favorite_border"
+                    android:tint="@color/gray" />
+
+                <TextView
+                    android:id="@+id/tv_favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="0" />
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -96,12 +133,14 @@
             android:id="@+id/mc_cover"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginRight="@dimen/margin_5"
             android:src="@mipmap/ic_launcher"
-            app:layout_constraintDimensionRatio="w,1:1"
+            app:cardCornerRadius="5dp"
+            app:layout_constraintBottom_toTopOf="@id/ll_container"
+            app:layout_constraintDimensionRatio="w,1.2:1"
             app:layout_constraintLeft_toRightOf="@id/tv_title"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:cardCornerRadius="5dp"
             app:layout_constraintWidth_percent="0.2">
 
             <ImageView

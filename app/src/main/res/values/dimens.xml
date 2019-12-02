@@ -3,6 +3,9 @@
     <dimen name="unit_margin">16dp</dimen>
     <dimen name="unit_padding">16dp</dimen>
 
+    <dimen name="margin_1">1dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_3">3dp</dimen>
     <dimen name="margin_5">5dp</dimen>
     <dimen name="margin_6">6dp</dimen>
     <dimen name="margin_7">7dp</dimen>
