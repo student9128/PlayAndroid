@@ -1,5 +1,6 @@
 package com.kevin.playandroid.base
 
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.kevin.playandroid.util.LogUtils
 import com.kevin.playandroid.util.ToastUtils
@@ -47,5 +48,9 @@ open class AppBaseActivity : AppCompatActivity() {
      */
     fun toast(resId: Int) {
         ToastUtils.showToast(applicationContext, resId)
+    }
+
+    fun snack(view: View, text:CharSequence){
+        ToastUtils.showSnack(view,text)
     }
 }

@@ -13,12 +13,14 @@ object Constants {
 
     const val KEY_LOGIN = "user/login"
     const val KEY_REGISTER = "user/register"
-    const val KEY_SET_COOKIE = "set-cookie"
+    const val KEY_SET_COOKIE = "Set-Cookie"
 
     const val KEY_COOKIE_STORE = "cookie_persistence"
 
-    const val KEY_USER_NAME = "userName"
+    const val KEY_USER_NAME = "username"
     const val KEY_LOGIN_STATE = "loginState"
+    const val KEY_USER_ID = "userID"
+    const val KEY_NICK_NAME = "nickname"
 
     const val DIALOG_TITLE = "COMMON_DIALOG_TITLE"
     const val DIALOG_MESSAGE = "COMMON_DIALOG_MESSAGE"
@@ -28,7 +30,6 @@ object Constants {
     const val ACCESS_NETWORK_STATE = 100
     const val WRITE_EXTERNAL_STORAGE = 101
     const val READ_EXTERNAL_STORAGE = 102
-
 
 
 }

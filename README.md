@@ -161,3 +161,11 @@ ERROR: Could not find org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60-eap-25
         }
     }
 ```
+14. RecyclerView局部刷新闪动，解决方案
+```
+  fun updateItem(position: Int, d: DataX) {
+        data[position] = d
+        //payload解决局部刷新闪动问题
+        notifyItemChanged(position, "payload$position")
+    }
+```

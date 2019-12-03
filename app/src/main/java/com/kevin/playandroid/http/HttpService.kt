@@ -1,7 +1,9 @@
 package com.kevin.playandroid.http
 
+import com.kevin.playandroid.home.ArticleList
 import com.kevin.playandroid.home.Banner
 import com.kevin.playandroid.home.Home
+import com.kevin.playandroid.sign.Sign
 import io.reactivex.Observable
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
@@ -18,19 +20,19 @@ interface HttpService {
 
     @POST("user/register")
     @FormUrlEncoded
-    fun register(
+    suspend fun register(
         @Field("username") username: String, @Field("password") pwd: String,
         @Field("repassword") repwd: String
-    ): Observable<Map<String, Any>>
+    ): Response<Sign>
 
     @POST("user/login")
     @FormUrlEncoded
-    fun login(
+    suspend fun login(
         @Field("username") username: String, @Field("password") pwd: String
-    ): Observable<Map<String, Any>>
+    ): Response<Sign>
 
     @GET("user/logout")
-    fun logout(): Observable<Map<String, Any>>
+    suspend fun logout(): Observable<Map<String, Any>>
 
     @GET("article/list/{page}/json")
     suspend fun getArticleListKtx(@Path("page") page: Int): Response<Home>
@@ -40,4 +42,9 @@ interface HttpService {
 
     @GET("article/listproject/{page}/json")
     suspend fun getProjectList(@Path("page") page: Int): Response<Home>
+
+    @POST("lg/collect/{id}/json")
+    suspend fun collectArticle(@Path("id") id: Int):Response<ArticleList>
+    @POST("lg/uncollect_originId/{id}/json")
+    suspend fun unCollectArticle(@Path("id") id: Int):Response<ArticleList>
 }

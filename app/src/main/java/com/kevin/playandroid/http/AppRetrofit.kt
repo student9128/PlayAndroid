@@ -1,8 +1,10 @@
 package com.kevin.playandroid.http
 
 import android.os.Build
+import android.util.Log
 import com.kevin.playandroid.BuildConfig
 import com.kevin.playandroid.common.Constants
+import com.kevin.playandroid.util.LogUtils
 import com.kevin.playandroid.util.SPUtils
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -75,7 +77,7 @@ class AppRetrofit {
         }
         builder.retryOnConnectionFailure(true)
             .connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
-            .writeTimeout(READ_TIME_OUT,TimeUnit.SECONDS)
+            .writeTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
             .addInterceptor(SaveCookieInterceptor())
             .addInterceptor(RequestCookiesInterceptor())
@@ -88,8 +90,18 @@ class AppRetrofit {
             val response = chain.proceed(request)
             val requestUrl = request.url().toString()
             val domain = request.url().host()
-            if ((requestUrl.contains(Constants.KEY_LOGIN) || requestUrl.contains(Constants.KEY_REGISTER))
-                && response.header(Constants.KEY_SET_COOKIE).isNullOrEmpty()
+            val headers = response.headers(Constants.KEY_SET_COOKIE)
+            if (headers.size > 0) {
+                headers.map { t ->
+                    LogUtils.printI("AppRetrofit", "item=$t")
+                }
+            }
+            val x =
+                (requestUrl.contains(Constants.KEY_LOGIN) || requestUrl.contains(Constants.KEY_REGISTER))
+
+
+            val notEmpty = response.headers(Constants.KEY_SET_COOKIE).isNotEmpty()
+            if ((requestUrl.contains(Constants.KEY_LOGIN) || requestUrl.contains(Constants.KEY_REGISTER)) && notEmpty
             ) {
                 val cookies = response.headers(Constants.KEY_SET_COOKIE)
                 val c = encodeCookie(cookies)
@@ -136,7 +148,9 @@ class AppRetrofit {
             val request = chain.request()
             val builder = request.newBuilder()
             val domain = request.url().host()
+//            LogUtils.printD("有吗？？？？","domain=$domain")
             val cookie = getCookie(domain)
+            LogUtils.printD("有吗？？？？", "cookie=$cookie")
             if (cookie.isNotEmpty()) {
                 builder.addHeader("Cookie", cookie)
             }

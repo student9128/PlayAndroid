@@ -22,7 +22,7 @@ object ToastUtils {
 
     fun showToast(context: Context, msg: String) {
         LogUtils.printD("Home", "msg=$msg")
-        toast?.cancel()
+//        toast?.cancel()
         if (toast == null) {
             LogUtils.printD("Home", "msg sss=$msg")
             toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT)

@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseFragment
+import com.kevin.playandroid.common.CommonModel
 import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.common.WebActivity
 import com.kevin.playandroid.common.betterSmoothScrollToPosition
@@ -30,6 +31,7 @@ import com.kevin.playandroid.util.ToastUtils
  */
 class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
     private lateinit var projectModel: ProjectModel
+    private lateinit var commonModel: CommonModel
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: ProjectAdapter
     private lateinit var llProgress: LinearLayout
@@ -41,6 +43,9 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
         super.onCreate(savedInstanceState)
         projectModel = mActivity.run {
             ViewModelProviders.of(this@ProjectFragment).get(ProjectModel::class.java)
+        }
+        commonModel = mActivity.run {
+            ViewModelProviders.of(this@ProjectFragment).get(CommonModel::class.java)
         }
     }
 
@@ -69,6 +74,7 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
         projectModel.getProjectList(pageNum, true)
         projectModel.getData().observe(this, Observer {
             mAdapter.update(it)
+            if (mSwipeRefreshLayout.isRefreshing) mSwipeRefreshLayout.isRefreshing = false
         })
         projectModel.getLoadingStatus().observe(this, Observer {
             if ("Loaded" == it) {
@@ -80,6 +86,21 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
             }
         })
         mAdapter.setOnRecyclerItemListener(this)
+
+        commonModel.getLoadingStatus().observe(this, Observer {
+            if (it["progress"] == "success") {
+                val position = it["position"]
+                val dataX = mData[position!!.toInt()]
+                val collect = dataX.collect
+                dataX.collect = !collect
+                mAdapter.updateItem(position!!.toInt(), dataX)
+            }
+        })
+        mSwipeRefreshLayout.setOnRefreshListener {
+            projectModel.refresh()
+            pageNum = 0
+            mAdapter.clearData()
+        }
         return view
     }
 
@@ -99,7 +120,13 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
             R.id.tv_favorite -> {
                 val isLogin = SPUtils.getBoolean(Constants.KEY_LOGIN_STATE)
                 if (isLogin) {
-
+                    val dataX = mData[position]
+                    val collect = dataX.collect
+                    if (collect) {
+                        commonModel.collectArticle(dataX.id, position)
+                    } else {
+                        commonModel.unCollectArticle(dataX.id, position)
+                    }
                 } else {
                     ToastUtils.showSnack(mRecyclerView, "请先登录")
                 }

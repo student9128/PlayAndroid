@@ -15,15 +15,12 @@ import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
 import com.kevin.playandroid.base.BaseActivity
 import com.kevin.playandroid.home.HomeFragment
-import com.kevin.playandroid.http.AppRetrofit
 import com.kevin.playandroid.listener.ActivityCreateListener
 import com.kevin.playandroid.nav.NavFragment
 import com.kevin.playandroid.project.ProjectFragment
+import com.kevin.playandroid.sign.LoginActivity
 import com.kevin.playandroid.sign.RegisterActivity
-import com.kevin.playandroid.sign.RegisterActivity.Companion.setOnActivityCreatedListener
-import com.kevin.playandroid.util.SPUtils
 import com.kevin.playandroid.wxarticle.OfficialAccountFragment
-import kotlinx.android.synthetic.main.layout_tool_bar.*
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
     ActivityCreateListener {
@@ -68,7 +65,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navView.itemTextColor = colorStateList
         navView.itemIconTintList = colorStateList
         setNavItemCheck(navView.menu.getItem(0))
-        setOnActivityCreatedListener(this)
+        RegisterActivity.setOnActivityCreatedListener(this)
+        LoginActivity.setOnActivityCreatedListener(this)
+
     }
 
     private fun initHostFragment() {
@@ -169,6 +168,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 startActivity(Intent(this, RegisterActivity::class.java))
             }
             R.id.menu_login -> {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
             R.id.menu_logout -> {
                 //退出登录，关闭软件两个选项

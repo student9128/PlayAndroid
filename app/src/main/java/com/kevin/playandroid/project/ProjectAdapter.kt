@@ -1,7 +1,7 @@
 package com.kevin.playandroid.project
 
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +9,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.kevin.playandroid.R
-import com.kevin.playandroid.common.WebActivity
 import com.kevin.playandroid.common.formatHtml
 import com.kevin.playandroid.home.DataX
 import kotlinx.android.synthetic.main.adapter_item_footer.view.*
@@ -61,10 +62,21 @@ class ProjectAdapter(var context: Context, var data: MutableList<DataX>) :
         data.addAll(d)
         notifyDataSetChanged()
     }
+    fun clearData(){
+        data.clear()
+        notifyDataSetChanged()
+    }
+
+    fun updateItem(position: Int, d: DataX) {
+        data[position] = d
+        //payload解决局部刷新闪动问题
+        notifyItemChanged(position, "payload$position")
+    }
 
     fun toEnd() {
         isEnd = true
     }
+
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == TYPE_NORMAL) {
@@ -75,10 +87,20 @@ class ProjectAdapter(var context: Context, var data: MutableList<DataX>) :
                 desc.text = formatHtml(dataX.desc)
                 author.text = dataX.author
                 time.text = dataX.niceDate.substring(0, 10)
-                fav.text = dataX.zan.toString()
+//                fav.text = dataX.zan.toString()
+
+                if (dataX.collect) {
+                    favorite.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary))
+                    favorite.setImageResource(R.drawable.ic_favorite_black_24dp)
+                } else {
+                    favorite.setColorFilter(ContextCompat.getColor(context, R.color.gray))
+                    favorite.setImageResource(R.drawable.ic_favorite_border)
+
+                }
+                favorite.imageTintMode
                 Glide.with(context).load(dataX.envelopePic)
                     .centerCrop()
-                    .into(conver)
+                    .into(cover)
                 mcContainer.setOnClickListener {
                     listener?.let { it.onContainerItemClick(position) }
                 }
@@ -129,8 +151,9 @@ class ProjectAdapter(var context: Context, var data: MutableList<DataX>) :
         val desc: TextView = itemView.tv_describe
         val container: LinearLayout = itemView.ll_container
         val mcContainer: MaterialCardView = itemView.mc_container
-        val conver: ImageView = itemView.iv_cover
-        val llFav:LinearLayout = itemView.ll_favorite
+        val cover: ImageView = itemView.iv_cover
+        val llFav: LinearLayout = itemView.ll_favorite
+        var favorite: ImageView = itemView.iv_favorite
 
     }
 
