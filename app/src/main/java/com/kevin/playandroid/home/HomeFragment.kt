@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseFragment
+import com.kevin.playandroid.common.CommonModel
+import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.common.betterSmoothScrollToPosition
+import com.kevin.playandroid.util.SPUtils
+import com.kevin.playandroid.util.ToastUtils
 
 /**
  * Created by Kevin on 2019-11-20<br/>
@@ -23,9 +26,10 @@ import com.kevin.playandroid.common.betterSmoothScrollToPosition
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(), HomeAdapter.OnRecyclerItemClickListener {
 
     private lateinit var homeModel: HomeModel
+    private lateinit var commonModel: CommonModel
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mAdapter: HomeAdapter
     private lateinit var llProgress: LinearLayout
@@ -37,6 +41,7 @@ class HomeFragment : BaseFragment() {
         homeModel = mActivity.run {
             ViewModelProviders.of(this@HomeFragment).get(HomeModel::class.java)
         }
+        commonModel = ViewModelProviders.of(this@HomeFragment).get(CommonModel::class.java)
 
     }
 
@@ -100,7 +105,44 @@ class HomeFragment : BaseFragment() {
                 if (mSwipeRefreshLayout.isRefreshing) mSwipeRefreshLayout.isRefreshing = false
             })
         }
+        mAdapter.setOnRecyclerItemListener(this)
+
+
         return view
+    }
+
+    override fun onChildItemClick(viewId: Int, position: Int, data: DataX?) {
+        when (viewId) {
+            R.id.iv_favorite -> {
+                val isLogin = SPUtils.getBoolean(Constants.KEY_LOGIN_STATE)
+                if (isLogin) {
+                    val collect = data!!.collect
+                    if (collect) {
+                        commonModel.collectArticle(data!!.id, position)
+                    } else {
+                        commonModel.unCollectArticle(data!!.id, position)
+                    }
+                } else {
+                    ToastUtils.showSnack(mRecyclerView, "请先登录")
+                }
+                commonModel.getLoadingStatus().observe(this, Observer {
+                    if (it["progress"] == "success") {
+                        val i = it["position"]
+                        if (position == i!!.toInt()) {
+                            val collect = data!!.collect
+                            data!!.collect = !collect
+                            if (collect) {
+                                ToastUtils.showSnack(mRecyclerView, "取消收藏")
+                            } else {
+                                ToastUtils.showSnack(mRecyclerView, "收藏成功")
+
+                            }
+                            mAdapter.notifyItemChanged(position, "payload$position")
+                        }
+                    }
+                })
+            }
+        }
     }
 
 

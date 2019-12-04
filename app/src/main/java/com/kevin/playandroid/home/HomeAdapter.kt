@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -14,10 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.card.MaterialCardView
 import com.kevin.playandroid.R
-import com.kevin.playandroid.common.WebActivity
-import com.kevin.playandroid.common.formatHtml
-import com.kevin.playandroid.common.spanString
+import com.kevin.playandroid.common.*
 import com.kevin.playandroid.util.DisplayUtils
+import com.kevin.playandroid.util.SPUtils
 import com.kevin.playandroid.util.ToastUtils
 import com.kevin.playandroid.view.AdapterDataObserverProxy
 import com.zhpan.bannerview.BannerViewPager
@@ -31,7 +31,10 @@ import kotlinx.android.synthetic.main.adapter_item_home.view.*
  * 公众号：竺小竹
  * Describe:<br/>
  */
-class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
+class HomeAdapter(
+    val context: Context,
+    var bannerData: List<BannerData>
+) :
     PagedListAdapter<DataX, RecyclerView.ViewHolder>(HomeItemCallback()) {
     companion object {
         private const val ITEM_TYPE_HEADER = 100
@@ -46,6 +49,8 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 return oldItem.id == newItem.id && oldItem.collect == newItem.collect
             }
         }
+
+        var listener: OnRecyclerItemClickListener? = null
     }
 
     fun addBanner(d: List<BannerData>) {
@@ -62,13 +67,14 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
         val time: TextView = itemView.tv_time
         val mcContainer: MaterialCardView = itemView.mc_container
         val new: TextView = itemView.tv_new
-        fun bindTo(data: DataX?) {
+        val favorite: ImageView = itemView.iv_favorite
+        fun bindTo(data: DataX?, position: Int) {
             data?.let {
                 title.text = formatHtml(it.title)
                 val authorStr: String =
                     if (it.author.isNotEmpty()) "作者：${it.author}" else "分享人：${it.shareUser}"
                 val authorSpanStr =
-                   spanString(
+                    spanString(
                         context,
                         authorStr,
                         if (it.author.isNotEmpty()) 3 else 4,
@@ -94,11 +100,22 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
                 } else {
                     new.visibility = View.GONE
                 }
+                if (it.collect) {
+                    favorite.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary))
+                    favorite.setImageResource(R.drawable.ic_favorite_black_24dp)
+                } else {
+                    favorite.setColorFilter(ContextCompat.getColor(context, R.color.gray))
+                    favorite.setImageResource(R.drawable.ic_favorite_border)
+
+                }
             }
             mcContainer.setOnClickListener {
                 val intent = Intent(context, WebActivity::class.java)
                 intent.putExtra("url", data!!.link)
                 context.startActivity(intent)
+            }
+            favorite.setOnClickListener {
+                listener?.onChildItemClick(R.id.iv_favorite, position,data)
             }
         }
     }
@@ -158,7 +175,7 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
             is FooterViewHolder -> {
             }
             is ContentViewHolder -> {
-                holder.bindTo(getDataItem(position))
+                holder.bindTo(getDataItem(position), position - 1)
             }
         }
 //        getItem(position)?.run {
@@ -207,8 +224,11 @@ class HomeAdapter(val context: Context, var bannerData: List<BannerData>) :
         }
     }
 
+    fun setOnRecyclerItemListener(l: OnRecyclerItemClickListener) {
+        listener = l
+    }
 
     interface OnRecyclerItemClickListener {
-        fun onRecyclerItemClick(position: Int)
+        fun onChildItemClick(viewId: Int, position: Int, data: DataX?)
     }
 }
