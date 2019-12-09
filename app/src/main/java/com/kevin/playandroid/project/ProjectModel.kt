@@ -53,7 +53,7 @@ class ProjectModel : ViewModel(), CoroutineScope, LifecycleObserver {
     }
 
     fun refresh() {
-        getProjectList(0,true)
+        getProjectList(0, true)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

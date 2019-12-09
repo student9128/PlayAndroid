@@ -2,6 +2,7 @@ package com.kevin.playandroid.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,11 +100,7 @@ class HomeFragment : BaseFragment(), HomeAdapter.OnRecyclerItemClickListener {
 //                Observer { t -> mAdapter!!.submitList(t) })
 //        }
         mSwipeRefreshLayout.setOnRefreshListener {
-            mAdapter!!.submitList(null)
-            homeModel.refresh().observe(this, Observer { t ->
-                mAdapter!!.submitList(t)
-                if (mSwipeRefreshLayout.isRefreshing) mSwipeRefreshLayout.isRefreshing = false
-            })
+            refresh()
         }
         mAdapter.setOnRecyclerItemListener(this)
 
@@ -111,16 +108,23 @@ class HomeFragment : BaseFragment(), HomeAdapter.OnRecyclerItemClickListener {
         return view
     }
 
+    fun refresh() {
+        mAdapter!!.submitList(null)
+        homeModel.refresh().observe(this, Observer { t ->
+            mAdapter!!.submitList(t)
+            if (mSwipeRefreshLayout.isRefreshing) mSwipeRefreshLayout.isRefreshing = false
+        })
+    }
+
     override fun onChildItemClick(viewId: Int, position: Int, data: DataX?) {
         when (viewId) {
             R.id.iv_favorite -> {
-                val isLogin = SPUtils.getBoolean(Constants.KEY_LOGIN_STATE)
                 if (isLogin) {
                     val collect = data!!.collect
                     if (collect) {
-                        commonModel.collectArticle(data!!.id, position)
-                    } else {
                         commonModel.unCollectArticle(data!!.id, position)
+                    } else {
+                        commonModel.collectArticle(data!!.id, position)
                     }
                 } else {
                     ToastUtils.showSnack(mRecyclerView, "请先登录")
@@ -139,6 +143,10 @@ class HomeFragment : BaseFragment(), HomeAdapter.OnRecyclerItemClickListener {
                             }
                             mAdapter.notifyItemChanged(position, "payload$position")
                         }
+                    }else{
+                        val text = it["errorMsg"]
+                        printD("test==$text")
+//                        ToastUtils.showSnack(mRecyclerView, text!!)
                     }
                 })
             }

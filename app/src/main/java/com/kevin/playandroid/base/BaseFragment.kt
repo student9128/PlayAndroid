@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.kevin.playandroid.common.Constants
+import com.kevin.playandroid.util.SPUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
@@ -14,10 +16,11 @@ import kotlin.coroutines.CoroutineContext
  * 公众号：竺小竹
  * Describe:<br/>
  */
-abstract class BaseFragment : AppBaseFragment(){
-//    lateinit var job: Job()
+abstract class BaseFragment : AppBaseFragment() {
+    //    lateinit var job: Job()
 //    override val coroutineContext: CoroutineContext
 //        get() = job + Dispatchers.Main
+    val isLogin: Boolean by lazy { SPUtils.getBoolean(Constants.KEY_LOGIN_STATE) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

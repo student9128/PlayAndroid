@@ -1,10 +1,13 @@
 package com.kevin.playandroid.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import com.kevin.playandroid.R
+import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.listener.ActivityCreateListener
+import com.kevin.playandroid.util.SPUtils
 import kotlinx.android.synthetic.main.layout_tool_bar.*
 
 /**
@@ -15,6 +18,7 @@ import kotlinx.android.synthetic.main.layout_tool_bar.*
  */
 abstract class BaseActivity : AppBaseActivity() {
     var toolbar: Toolbar? = null
+    val isLogin: Boolean by lazy { SPUtils.getBoolean(Constants.KEY_LOGIN_STATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResId())
@@ -44,5 +48,8 @@ abstract class BaseActivity : AppBaseActivity() {
     abstract fun initView()
     abstract fun initListener()
 
+    fun startNewActivity(clazz: Class<out BaseActivity>) {
+        startActivity(Intent(this, clazz))
+    }
 
 }

@@ -22,4 +22,6 @@
     <string name="content">CONTENT</string>
     <string name="harmful">HARMFUL</string>
     <string name="phishing">PHISHING</string>
+    <string name="hasLogged">You have logged in</string>
+    <string name="hasLogedOut">You have logged out</string>
 </resources>

@@ -97,11 +97,15 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
             }
         })
         mSwipeRefreshLayout.setOnRefreshListener {
-            projectModel.refresh()
-            pageNum = 0
-            mAdapter.clearData()
+            refresh()
         }
         return view
+    }
+
+    fun refresh() {
+        projectModel.refresh()
+        pageNum = 0
+        mAdapter.clearData()
     }
 
     override fun onLoadMore() {

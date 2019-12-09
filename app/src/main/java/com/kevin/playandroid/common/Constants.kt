@@ -14,6 +14,7 @@ object Constants {
     const val KEY_LOGIN = "user/login"
     const val KEY_REGISTER = "user/register"
     const val KEY_SET_COOKIE = "Set-Cookie"
+    const val KEY_LOGOUT = "user/logout/json"
 
     const val KEY_COOKIE_STORE = "cookie_persistence"
 

@@ -35,8 +35,10 @@ class CommonModel : ViewModel(), CoroutineScope, LifecycleObserver {
                 map["position"] = position.toString()
                 if (errorMsg!!.isEmpty()) {
                     map["progress"] = "success"
+                    map["errorMsg"] = errorMsg
                 } else {
                     map["progress"] = "failed"
+                    map["errorMsg"] = errorMsg
                 }
                 progressStatus.postValue(map)
 
@@ -44,6 +46,7 @@ class CommonModel : ViewModel(), CoroutineScope, LifecycleObserver {
                 var map: MutableMap<String, String?> = mutableMapOf()
                 map["position"] = ""
                 map["progress"] = "failed"
+                map["errorMsg"] = "请求失败"
                 progressStatus.postValue(map)
             }
         }

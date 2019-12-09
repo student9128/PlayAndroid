@@ -35,9 +35,10 @@ class AppRetrofit {
         }
     }
 
-    private var retrofit: Retrofit
+    private lateinit var retrofit: Retrofit
 
     constructor() {
+        try {
         retrofit = Retrofit.Builder()
             .client(initBuilder().build())
             .addConverterFactory(GsonConverterFactory.create())
@@ -45,6 +46,9 @@ class AppRetrofit {
 //            .addCallAdapterFactory()
             .baseUrl(BASE_URL)
             .build()
+        }catch (e:Exception){
+
+        }
     }
 
     fun getHttpService(httpService: (HttpService) -> Unit): HttpService {
@@ -96,9 +100,9 @@ class AppRetrofit {
                     LogUtils.printI("AppRetrofit", "item=$t")
                 }
             }
+            LogUtils.printD("AppRetrofit", "requestUrl======》》》》》》=====$requestUrl")
             val x =
                 (requestUrl.contains(Constants.KEY_LOGIN) || requestUrl.contains(Constants.KEY_REGISTER))
-
 
             val notEmpty = response.headers(Constants.KEY_SET_COOKIE).isNotEmpty()
             if ((requestUrl.contains(Constants.KEY_LOGIN) || requestUrl.contains(Constants.KEY_REGISTER)) && notEmpty
@@ -106,6 +110,9 @@ class AppRetrofit {
                 val cookies = response.headers(Constants.KEY_SET_COOKIE)
                 val c = encodeCookie(cookies)
                 saveCookie(requestUrl, domain, c)
+            }
+            if (requestUrl.contains(Constants.KEY_LOGOUT) && domain.isNotEmpty()) {
+                SPUtils.save(domain, "")
             }
             return response
         }

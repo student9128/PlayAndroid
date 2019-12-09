@@ -31,8 +31,8 @@ interface HttpService {
         @Field("username") username: String, @Field("password") pwd: String
     ): Response<Sign>
 
-    @GET("user/logout")
-    suspend fun logout(): Observable<Map<String, Any>>
+    @GET("user/logout/json")
+    suspend fun logout(): Response<Sign>
 
     @GET("article/list/{page}/json")
     suspend fun getArticleListKtx(@Path("page") page: Int): Response<Home>
@@ -44,7 +44,9 @@ interface HttpService {
     suspend fun getProjectList(@Path("page") page: Int): Response<Home>
 
     @POST("lg/collect/{id}/json")
-    suspend fun collectArticle(@Path("id") id: Int):Response<ArticleList>
+    suspend fun collectArticle(@Path("id") id: Int): Response<ArticleList>
+
     @POST("lg/uncollect_originId/{id}/json")
-    suspend fun unCollectArticle(@Path("id") id: Int):Response<ArticleList>
+    suspend fun unCollectArticle(@Path("id") id: Int): Response<ArticleList>
+
 }

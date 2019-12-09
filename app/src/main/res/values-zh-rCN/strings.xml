@@ -23,4 +23,7 @@
     <string name="content">内容</string>
     <string name="harmful">危险</string>
     <string name="confirm_password">确认密码</string>
+    <string name="hasLogged">已登录</string>
+    <string name="hasLogedOut">已退出</string>
+
 </resources>

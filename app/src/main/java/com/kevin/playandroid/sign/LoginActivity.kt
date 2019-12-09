@@ -1,11 +1,14 @@
 package com.kevin.playandroid.sign
 
+import android.app.Activity
+import android.content.Intent
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputEditText
+import com.kevin.playandroid.MainActivity
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseActivity
 import com.kevin.playandroid.listener.ActivityCreateListener
@@ -41,16 +44,21 @@ class LoginActivity : BaseActivity() {
         mPassword = findViewById(R.id.text_input_et_password)
         mLogin = findViewById(R.id.btn_login)
 
-        signModel.getLoadingStatus().observe(this, Observer {
+        signModel.getLoginLoadingStatus().observe(this, Observer {
             pb_progress.visibility = View.GONE
             if (it["progress"] == "success") {
                 val msg = it["errorMsg"]
                 if (msg!!.isEmpty()) {
                     snack(mAccount, "登录成功")
+                    var i = Intent(this, MainActivity::class.java)
+                    setResult(Activity.RESULT_OK, i)
                     finish()
                 } else {
                     snack(mAccount, msg)
                 }
+            }else{
+                val msg = it["errorMsg"]
+                snack(mAccount, msg!!)
             }
         })
     }

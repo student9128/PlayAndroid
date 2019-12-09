@@ -1,25 +1,32 @@
 package com.kevin.playandroid
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Handler
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
 import com.kevin.playandroid.base.BaseActivity
+import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.home.HomeFragment
 import com.kevin.playandroid.listener.ActivityCreateListener
 import com.kevin.playandroid.nav.NavFragment
 import com.kevin.playandroid.project.ProjectFragment
 import com.kevin.playandroid.sign.LoginActivity
 import com.kevin.playandroid.sign.RegisterActivity
+import com.kevin.playandroid.sign.SignModel
+import com.kevin.playandroid.util.SPUtils
 import com.kevin.playandroid.wxarticle.OfficialAccountFragment
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener,
@@ -28,6 +35,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
+    private lateinit var nickname: TextView
     private val states =
         arrayOf(intArrayOf(-android.R.attr.state_checked), intArrayOf(android.R.attr.state_checked))
     private lateinit var colors: IntArray
@@ -37,6 +45,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private var mNavFragment: NavFragment? = null
     private var mOfficialAccountFragment: OfficialAccountFragment? = null
     private var mTempFragment: Fragment? = null
+    private lateinit var signModel: SignModel
     override fun getLayoutResId(): Int {
         return R.layout.activity_main
     }
@@ -46,6 +55,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val icon = ContextCompat.getDrawable(this, R.drawable.ic_menu)
         icon!!.setTint(ContextCompat.getColor(this, R.color.white))
         supportActionBar!!.setHomeAsUpIndicator(icon)
+        signModel = ViewModelProviders.of(this).get(SignModel::class.java)
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
 //        val navController = findNavController(R.id.nav_host_fragment)
@@ -65,8 +75,22 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navView.itemTextColor = colorStateList
         navView.itemIconTintList = colorStateList
         setNavItemCheck(navView.menu.getItem(0))
+        val headerView = navView.getHeaderView(0)
+        nickname = headerView.findViewById(R.id.tv_nickname)
         RegisterActivity.setOnActivityCreatedListener(this)
         LoginActivity.setOnActivityCreatedListener(this)
+        signModel.getLogoutLoadingStatus().observe(this, Observer {
+            if (it["progress"] == "success") {
+                val msg = it["errorMsg"]
+                if (msg!!.isEmpty()) {
+                    snack(drawerLayout, "退出成功")
+                    refresh()
+                    nickname.text = "Kevin"
+                } else {
+                    snack(drawerLayout, msg)
+                }
+            }
+        })
 
     }
 
@@ -165,17 +189,57 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 toolbar!!.setTitle(R.string.menu_official_account)
             }
             R.id.menu_register -> {
-                startActivity(Intent(this, RegisterActivity::class.java))
+                if (isLogin) {
+                    snack(drawerLayout, getString(R.string.hasLogged))
+                } else {
+//                    startActivity()
+                    startActivityForResult(Intent(this, RegisterActivity::class.java), 0)
+                }
             }
             R.id.menu_login -> {
-                startActivity(Intent(this, LoginActivity::class.java))
+                if (isLogin) {
+                    snack(drawerLayout, getString(R.string.hasLogged))
+                } else {
+//                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivityForResult(Intent(this, LoginActivity::class.java), 1)
+                }
             }
             R.id.menu_logout -> {
                 //退出登录，关闭软件两个选项
+                if (isLogin) {
+                    signModel.logout()
+                } else {
+                    snack(drawerLayout, getString(R.string.hasLogedOut))
+                }
+                closeDrawer()
             }
         }
 //        closeDrawer()
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                0 -> {
+                    refresh()
+                }
+                1 -> {
+                    refresh()
+                }
+
+            }
+            val username = SPUtils.getString(Constants.KEY_USER_NAME)
+            if (username.isNotEmpty()) {
+                nickname.text = username
+            }
+        }
+    }
+
+    private fun refresh() {
+        mHomeFragment?.refresh()
+        mProjectFragment?.refresh()
     }
 
 
