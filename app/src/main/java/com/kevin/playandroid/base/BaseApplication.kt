@@ -3,7 +3,6 @@ package com.kevin.playandroid.base
 import android.app.Application
 import android.content.Context
 import com.kevin.playandroid.util.SPUtils
-import com.kevin.playandroid.util.SharedPreferencesUtils
 
 /**
  * Created by Kevin on 2019-11-22<br/>
@@ -23,6 +22,5 @@ class BaseApplication : Application() {
         super.onCreate()
         mContext = applicationContext
         SPUtils.initSP(this)
-//        SharedPreferencesUtils
     }
 }

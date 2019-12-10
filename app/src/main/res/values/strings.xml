@@ -8,6 +8,10 @@
     <string name="menu_logout">Sign out</string>
     <string name="menu_register">Sign up</string>
     <string name="menu_login">Sign in</string>
+    <string name="menu_about">About APP</string>
+    <string name="menu_code">Source code</string>
+    <string name="menu_update">Check update</string>
+    <string name="menu_setting">Settings</string>
     <string name="account">Account</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
@@ -24,4 +28,5 @@
     <string name="phishing">PHISHING</string>
     <string name="hasLogged">You have logged in</string>
     <string name="hasLogedOut">You have logged out</string>
+    <string name="repoUrl">https://github.com/student9128/PlayAndroid</string>
 </resources>

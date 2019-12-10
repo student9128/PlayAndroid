@@ -117,6 +117,7 @@ class HomeFragment : BaseFragment(), HomeAdapter.OnRecyclerItemClickListener {
     }
 
     override fun onChildItemClick(viewId: Int, position: Int, data: DataX?) {
+        val isLogin = getBooleanSP(Constants.KEY_LOGIN_STATE)
         when (viewId) {
             R.id.iv_favorite -> {
                 if (isLogin) {

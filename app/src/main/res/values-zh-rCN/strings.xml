@@ -9,6 +9,10 @@
     <string name="menu_logout">登出</string>
     <string name="menu_register">注册</string>
     <string name="menu_login">登入</string>
+    <string name="menu_about">关于</string>
+    <string name="menu_code">源代码</string>
+    <string name="menu_update">检查更新</string>
+    <string name="menu_setting">设置</string>
     <string name="account">账号</string>
     <string name="password">密码</string>
     <string name="location_hint">请输入网址</string>
@@ -25,5 +29,5 @@
     <string name="confirm_password">确认密码</string>
     <string name="hasLogged">已登录</string>
     <string name="hasLogedOut">已退出</string>
-
+    <string name="repoUrl">https://github.com/student9128/PlayAndroid</string>
 </resources>

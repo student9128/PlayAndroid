@@ -115,14 +115,14 @@ class ProjectFragment : BaseFragment(), ProjectAdapter.OnRecyclerItemListener {
     override fun onContainerItemClick(position: Int) {
         val dataX = mData[position]
         val intent = Intent(context, WebActivity::class.java)
-        intent.putExtra("url", dataX.link)
+        intent.putExtra(Constants.WEB_URL, dataX.link)
         startActivity(intent)
     }
 
     override fun onChildItemClick(viewId: Int, position: Int) {
+        val isLogin = getBooleanSP(Constants.KEY_LOGIN_STATE)
         when (viewId) {
             R.id.tv_favorite -> {
-                val isLogin = SPUtils.getBoolean(Constants.KEY_LOGIN_STATE)
                 if (isLogin) {
                     val dataX = mData[position]
                     val collect = dataX.collect

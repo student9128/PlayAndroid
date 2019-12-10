@@ -74,9 +74,9 @@ class RegisterActivity : BaseActivity() {
                 } else {
                     snack(mAccount, msg)
                 }
-            }else{
+            } else {
                 val msg = it["errorMsg"]
-                snack(mAccount,msg!!)
+                snack(mAccount, msg!!)
             }
         })
     }

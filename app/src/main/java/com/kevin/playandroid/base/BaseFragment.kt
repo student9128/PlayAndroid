@@ -20,7 +20,6 @@ abstract class BaseFragment : AppBaseFragment() {
     //    lateinit var job: Job()
 //    override val coroutineContext: CoroutineContext
 //        get() = job + Dispatchers.Main
-    val isLogin: Boolean by lazy { SPUtils.getBoolean(Constants.KEY_LOGIN_STATE) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

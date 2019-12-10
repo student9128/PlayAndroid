@@ -28,6 +28,8 @@ object Constants {
     const val DIALOG_LEFT_BUTTON = "COMMON_DIALOG_LEFT_BUTTON"
     const val DIALOG_RIGHT_BUTTON = "COMMON_DIALOG_RIGHT_BUTTON"
 
+    const val WEB_URL = "url"
+
     const val ACCESS_NETWORK_STATE = 100
     const val WRITE_EXTERNAL_STORAGE = 101
     const val READ_EXTERNAL_STORAGE = 102

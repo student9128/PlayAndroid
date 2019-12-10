@@ -111,7 +111,7 @@ class HomeAdapter(
             }
             mcContainer.setOnClickListener {
                 val intent = Intent(context, WebActivity::class.java)
-                intent.putExtra("url", data!!.link)
+                intent.putExtra(Constants.WEB_URL, data!!.link)
                 context.startActivity(intent)
             }
             favorite.setOnClickListener {

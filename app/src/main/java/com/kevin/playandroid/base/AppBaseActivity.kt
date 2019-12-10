@@ -2,7 +2,9 @@ package com.kevin.playandroid.base
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.kevin.playandroid.common.Constants
 import com.kevin.playandroid.util.LogUtils
+import com.kevin.playandroid.util.SPUtils
 import com.kevin.playandroid.util.ToastUtils
 
 /**
@@ -50,7 +52,17 @@ open class AppBaseActivity : AppCompatActivity() {
         ToastUtils.showToast(applicationContext, resId)
     }
 
-    fun snack(view: View, text:CharSequence){
-        ToastUtils.showSnack(view,text)
+    fun snack(view: View, text: CharSequence) {
+        ToastUtils.showSnack(view, text)
+    }
+
+    fun getBooleanSP(key: String): Boolean {
+        return SPUtils.getBoolean(key)
+    }
+    fun getStringSP(key:String):String{
+        return SPUtils.getString(key)
+    }
+    fun getIntSP(key: String):Int{
+        return SPUtils.getInt(key)
     }
 }

@@ -1,9 +1,11 @@
 package com.kevin.playandroid.base
 
 import android.content.Context
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.kevin.playandroid.util.LogUtils
+import com.kevin.playandroid.util.SPUtils
 import com.kevin.playandroid.util.ToastUtils
 
 /**
@@ -54,5 +56,21 @@ open class AppBaseFragment : Fragment() {
      */
     fun toast(resId: Int) {
         ToastUtils.showToast(context!!.applicationContext, resId)
+    }
+
+    fun snack(view: View, text: CharSequence) {
+        ToastUtils.showSnack(view, text)
+    }
+
+    fun getBooleanSP(key: String): Boolean {
+        return SPUtils.getBoolean(key)
+    }
+
+    fun getStringSP(key: String): String {
+        return SPUtils.getString(key)
+    }
+
+    fun getIntSP(key: String): Int {
+        return SPUtils.getInt(key)
     }
 }

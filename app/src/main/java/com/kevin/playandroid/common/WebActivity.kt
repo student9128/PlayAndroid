@@ -15,6 +15,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.text.HtmlCompat
 import com.kevin.playandroid.R
 import com.kevin.playandroid.base.BaseActivity
+import com.kevin.playandroid.listener.ActivityCreateListener
+import com.kevin.playandroid.sign.RegisterActivity
 import com.kevin.playandroid.util.LogUtils
 import org.mozilla.geckoview.*
 import org.mozilla.geckoview.GeckoSessionSettings.USER_AGENT_MODE_MOBILE
@@ -36,6 +38,19 @@ class WebActivity : BaseActivity() {
         mutableListOf()
     private var isCanGoBack: Boolean = false
     private var isCanGoForward: Boolean = false
+
+    companion object {
+        var listener: ActivityCreateListener? = null
+        open fun setOnActivityCreatedListener(listener: ActivityCreateListener) {
+            this.listener = listener
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+       listener!!.onActivityCreateListener(TAG)
+    }
+
     override fun getLayoutResId(): Int {
         return R.layout.activity_web
     }
@@ -78,7 +93,7 @@ class WebActivity : BaseActivity() {
         val runtime = GeckoRuntime.getDefault(this)
         geckoSession.open(runtime)
         geckoView.setSession(geckoSession)
-        val url = intent.getStringExtra("url")
+        val url = intent.getStringExtra(Constants.WEB_URL)
         geckoSession.loadUri(url)
 
         geckoSession.settings.useTrackingProtection = true

@@ -18,7 +18,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.google.android.material.navigation.NavigationView
 import com.kevin.playandroid.base.BaseActivity
+import com.kevin.playandroid.common.AboutActivity
 import com.kevin.playandroid.common.Constants
+import com.kevin.playandroid.common.SettingActivity
+import com.kevin.playandroid.common.WebActivity
 import com.kevin.playandroid.home.HomeFragment
 import com.kevin.playandroid.listener.ActivityCreateListener
 import com.kevin.playandroid.nav.NavFragment
@@ -77,8 +80,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setNavItemCheck(navView.menu.getItem(0))
         val headerView = navView.getHeaderView(0)
         nickname = headerView.findViewById(R.id.tv_nickname)
-        RegisterActivity.setOnActivityCreatedListener(this)
-        LoginActivity.setOnActivityCreatedListener(this)
         signModel.getLogoutLoadingStatus().observe(this, Observer {
             if (it["progress"] == "success") {
                 val msg = it["errorMsg"]
@@ -86,12 +87,33 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                     snack(drawerLayout, "退出成功")
                     refresh()
                     nickname.text = "Kevin"
+                    showSign()
                 } else {
                     snack(drawerLayout, msg)
                 }
             }
         })
+        if (getBooleanSP(Constants.KEY_LOGIN_STATE)) {
+            nickname.text = getStringSP(Constants.KEY_USER_NAME)
+            this.hideSign()
+        } else {
+            this.showSign()
 
+        }
+
+
+    }
+
+    private fun showSign() {
+        navView.menu.findItem(R.id.menu_register).isVisible = true
+        navView.menu.findItem(R.id.menu_login).isVisible = true
+        navView.menu.findItem(R.id.menu_logout).isVisible = false
+    }
+
+    private fun hideSign() {
+        navView.menu.findItem(R.id.menu_register).isVisible = false
+        navView.menu.findItem(R.id.menu_login).isVisible = false
+        navView.menu.findItem(R.id.menu_logout).isVisible = true
     }
 
     private fun initHostFragment() {
@@ -102,6 +124,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun initListener() {
+        RegisterActivity.setOnActivityCreatedListener(this)
+        LoginActivity.setOnActivityCreatedListener(this)
+        WebActivity.setOnActivityCreatedListener(this)
+        AboutActivity.setOnActivityCreatedListener(this)
+        SettingActivity.setOnActivityCreatedListener(this)
     }
 
     override fun onActivityCreateListener(activityName: String) {
@@ -159,6 +186,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         setNavItemCheck(item)
+        val isLogin = getBooleanSP(Constants.KEY_LOGIN_STATE)
         when (item.itemId) {
             R.id.nav_home -> {
                 if (mHomeFragment == null) {
@@ -213,8 +241,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
                 closeDrawer()
             }
+            R.id.menu_code -> {
+                val intent = Intent(this, WebActivity::class.java)
+                intent.putExtra(Constants.WEB_URL, getString(R.string.repoUrl))
+                startActivity(intent)
+            }
+            R.id.menu_setting -> {
+                startNewActivity(SettingActivity::class.java)
+            }
+            R.id.menu_about -> {
+                startNewActivity(AboutActivity::class.java)
+            }
+            R.id.menu_update->{
+                closeDrawer()
+            }
         }
-//        closeDrawer()
         return true
     }
 
@@ -233,6 +274,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             val username = SPUtils.getString(Constants.KEY_USER_NAME)
             if (username.isNotEmpty()) {
                 nickname.text = username
+            }
+            if (getBooleanSP(Constants.KEY_LOGIN_STATE)) {
+                this.hideSign()
+            } else {
+                this.showSign()
+
             }
         }
     }
