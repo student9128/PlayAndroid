@@ -68,6 +68,13 @@ android {
             jvmTarget = "1.8"
         }
     }
+    sourceSets{
+        main{
+            res.srcDirs=['src/main/res',
+                         'src/main/res/main-layout',
+                         'src/main/res/main-layout/layout',]
+        }
+    }
 }
 
 dependencies {
@@ -145,6 +152,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
     implementation "com.squareup.retrofit2:retrofit:2.6.2"
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'

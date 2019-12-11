@@ -3,6 +3,8 @@
 AndroidX
 
 ### 部分提交记录
+8.2019/12/11 目前已经完成注册、登录、登出、主页、项目、导航模块，WebView使用的了Firefox的GeckoView，本次提交优化了部分界面和代码
+
 7.2019/11/28 首页添加刷新和头部轮播
 
 6.2019/11/26 使用AndroidStudio 4.0 Canary 4 升级Gradle版本为4.0.0-alpha04
@@ -168,4 +170,28 @@ ERROR: Could not find org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60-eap-25
         //payload解决局部刷新闪动问题
         notifyItemChanged(position, "payload$position")
     }
+```
+15. 使用MaterialButton，由于使用的Theme是AppCompat的，所以初次添加使用的时候一直报错
+```
+Caused by: java.lang.IllegalArgumentException: This component requires that you specify a valid TextAppearance attribute. Update your app theme to inherit from Theme.MaterialComponents (or a descendant).
+```
+经过搜索发现需要添加Material的Theme。
+```
+ android:theme="@style/Theme.MaterialComponents.Light"
+```
+完整示例：
+```
+    implementation 'com.google.android.material:material:1.0.0'
+    
+   <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_login"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20"
+                    android:backgroundTint="@color/red_1"
+                    android:text="@string/menu_login"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:layout_constraintLeft_toLeftOf="@id/guide_line_1"
+                    app:layout_constraintRight_toLeftOf="@id/guide_line_2"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_password" />
 ```

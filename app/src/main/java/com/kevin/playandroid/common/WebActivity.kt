@@ -1,11 +1,17 @@
 package com.kevin.playandroid.common
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -34,10 +40,14 @@ class WebActivity : BaseActivity() {
     private lateinit var progressView: ProgressBar
     private lateinit var ivBack: ImageView
     private lateinit var trackersCount: TextView
+    private lateinit var url: String
     private var trackersBlockedList: List<ContentBlocking.BlockEvent> =
         mutableListOf()
     private var isCanGoBack: Boolean = false
     private var isCanGoForward: Boolean = false
+
+    private lateinit var clipboard: ClipboardManager
+    private var hasClipListen = false
 
     companion object {
         var listener: ActivityCreateListener? = null
@@ -48,7 +58,7 @@ class WebActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-       listener!!.onActivityCreateListener(TAG)
+        listener!!.onActivityCreateListener(TAG)
     }
 
     override fun getLayoutResId(): Int {
@@ -69,6 +79,8 @@ class WebActivity : BaseActivity() {
         ivBack = findViewById(R.id.iv_back)
         setupGeckoView()
         setupUrlEditText()
+        clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        registerPrimaryClipListener()
     }
 
     override fun initListener() {
@@ -79,6 +91,60 @@ class WebActivity : BaseActivity() {
                 onBackPressed()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_web_view, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_open_in_browser -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            }
+            R.id.action_copy_url -> {
+                copyUrl()
+            }
+        }
+        return true
+    }
+
+    private fun copyUrl() {
+        val clipData = ClipData.newPlainText("Copied Text", url)
+        clipboard.setPrimaryClip(clipData)
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unRegisterPrimaryClipListener()
+    }
+
+    private var clipListener = ClipboardManager.OnPrimaryClipChangedListener {
+        if (clipboard.hasPrimaryClip() && clipboard.primaryClip!!.itemCount > 0) {
+            val text = clipboard.primaryClip?.getItemAt(0)?.text
+            if (!text.isNullOrEmpty()) {
+                toast("复制成功")
+            }
+        }
+    }
+
+    private fun registerPrimaryClipListener() {
+        if (!hasClipListen) {
+            clipboard.addPrimaryClipChangedListener(clipListener)
+            hasClipListen = true
+        }
+
+    }
+
+    private fun unRegisterPrimaryClipListener() {
+        if (hasClipListen) {
+            clipboard.removePrimaryClipChangedListener(clipListener)
+            hasClipListen = false
+        }
+
     }
 
     private fun setupGeckoView() {
@@ -93,7 +159,7 @@ class WebActivity : BaseActivity() {
         val runtime = GeckoRuntime.getDefault(this)
         geckoSession.open(runtime)
         geckoView.setSession(geckoSession)
-        val url = intent.getStringExtra(Constants.WEB_URL)
+        url = intent.getStringExtra(Constants.WEB_URL)
         geckoSession.loadUri(url)
 
         geckoSession.settings.useTrackingProtection = true
@@ -210,7 +276,7 @@ class WebActivity : BaseActivity() {
             if (trackersBlockedList.isNotEmpty()) {
                 val friendlyURLs = getFriendlyTrackersUrls()
 //                showDialog(friendlyURLs)
-                friendlyURLs.forEach { i->printD("$i") }
+                friendlyURLs.forEach { i -> printD("$i") }
             }
         }
     }

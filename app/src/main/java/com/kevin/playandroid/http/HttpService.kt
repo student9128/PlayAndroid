@@ -3,6 +3,7 @@ package com.kevin.playandroid.http
 import com.kevin.playandroid.home.ArticleList
 import com.kevin.playandroid.home.Banner
 import com.kevin.playandroid.home.Home
+import com.kevin.playandroid.nav.Nav
 import com.kevin.playandroid.sign.Sign
 import io.reactivex.Observable
 import kotlinx.coroutines.Deferred
@@ -48,5 +49,14 @@ interface HttpService {
 
     @POST("lg/uncollect_originId/{id}/json")
     suspend fun unCollectArticle(@Path("id") id: Int): Response<ArticleList>
+
+    @GET("navi/json")
+    suspend fun getNav(): Response<Nav>
+
+    @GET("wxarticle/chapters/json")
+    suspend fun getWXArticle(): Response<Nav>
+
+    @GET("wxarticle/list/{id}/{page}/json")
+    suspend fun getWXChild(@Path("id") id: String, @Path("page") page: String): Response<Home>
 
 }

@@ -11,6 +11,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
+        app:popupTheme="@style/Theme.AppCompat.Light"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_scrollFlags="scroll|enterAlways|snap"
         app:navigationIcon="@drawable/ic_back_material_light"
@@ -42,14 +43,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_10"
                 android:background="@drawable/bg_web_edit"
+                android:ellipsize="end"
                 android:hint="@string/location_hint"
-                android:paddingLeft="@dimen/padding_3"
                 android:importantForAutofill="no"
                 android:inputType="text|textUri"
+                android:paddingVertical="@dimen/padding_5"
+                android:paddingLeft="@dimen/padding_3"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:ellipsize="end"
-                android:paddingVertical="@dimen/padding_5"
                 android:textColor="@color/black"
                 android:textColorHint="@color/gray"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -73,6 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tool_bar" />
+
     <TextView
         android:id="@+id/trackers_count"
         android:layout_width="wrap_content"
@@ -83,10 +85,10 @@
         android:background="@drawable/bg_tracker"
         android:elevation="10dp"
         android:gravity="center"
+        android:text="0"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="0" />
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
