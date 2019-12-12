@@ -2,6 +2,12 @@
 
 AndroidX
 
+### 截图
+<img src='./snapshots/snapshot1.png' width="200">
+<img src='./snapshots/snapshot2.png' width="200">
+<img src='./snapshots/snapshot3.png' width="200">
+<img src='./snapshots/snapshot4.png' width="200">
+
 ### 部分提交记录
 8.2019/12/11 目前已经完成注册、登录、登出、主页、项目、导航模块，WebView使用的了Firefox的GeckoView，本次提交优化了部分界面和代码
 
